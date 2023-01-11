@@ -3,9 +3,8 @@ system:
   env: 'public'  # Change to "develop" to skip authentication for development mode
   addr: 8881
   db-type: 'mysql'
-name: "gin_mall"
-port: 8081
-version: v1
+  name: "gin_mall"
+  version: v1
 
 # snowflake id config
 snowflake:
@@ -28,13 +27,13 @@ zap:
 mysql:
   path: '127.0.0.1:3306'
   config: 'charset=utf8mb4&parseTime=True&loc=Local'
-  db-name: 'bluebell'
+  db-name: 'gin_mall'
   username: 'root'
   password: 'toor'
   max-idle-conns: 10
   max-open-conns: 100
   log-mode: false
-  log-zap: ""
+  log-zap: "zap"
 
 
 redis:

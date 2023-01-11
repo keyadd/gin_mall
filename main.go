@@ -6,7 +6,6 @@ import (
 	"gin_mall/core"
 	"gin_mall/global"
 	"gin_mall/router"
-	"gin_mall/utils"
 	"gin_mall/validator"
 	"go.uber.org/zap"
 	"log"
@@ -33,8 +32,8 @@ func main() {
 	//初始化日志
 	global.GVA_LOG = core.Zap()
 	//初始化Mysql连接
-	global.SQLX_DB = core.Sqlx()
-	db := global.SQLX_DB.DB
+	global.GVA_DB = core.Gorm() // gorm连接数据库
+	db, _ := global.GVA_DB.DB()
 	defer db.Close()
 	//初始化Redis连接
 	global.GVA_REDIS = core.Redis()
@@ -45,9 +44,9 @@ func main() {
 	global.TRANS = validator.InitTrans("zh")
 
 	// 初使化 minio client对象
-	global.MINIO = core.InitMinIO()
+	//global.MINIO = core.InitMinIO()
 
-	utils.CreateMinoBuket("userheader")
+	//utils.CreateMinoBuket("userheader")
 
 	//注册路由
 	r := router.Setup()
@@ -74,7 +73,7 @@ func main() {
 	<-quit                                               // 阻塞在此，当接收到上述两种信号时才会往下执行
 	log.Println("Shutdown Server ...")
 	// 创建一个5秒超时的context
-	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	ctx, cancel := context.WithTimeout(context.Background(), 1*time.Second)
 	defer cancel()
 	// 5秒内优雅关闭服务（将未处理完的请求处理完再关闭服务），超过5秒就超时退出
 	if err := srv.Shutdown(ctx); err != nil {

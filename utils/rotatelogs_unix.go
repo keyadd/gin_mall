@@ -1,14 +1,15 @@
+//go:build !windows
 // +build !windows
 
 package utils
 
 import (
+	"gin_mall/global"
 	zaprotatelogs "github.com/lestrrat-go/file-rotatelogs"
 	"go.uber.org/zap/zapcore"
 	"os"
 	"path"
 	"time"
-	"web_app/global"
 )
 
 //@author: [SliverHorn](https://github.com/SliverHorn)

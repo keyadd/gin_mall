@@ -5,7 +5,6 @@ import (
 	"gin_mall/global"
 	"gin_mall/utils"
 	"github.com/gin-gonic/gin"
-	"strings"
 )
 
 const CtxUserIDKey = "userID"
@@ -23,15 +22,9 @@ func JWTAuthMiddleware() func(c *gin.Context) {
 			c.Abort()
 			return
 		}
-		// 按空格分割
-		parts := strings.SplitN(authHeader, " ", 2)
-		if !(len(parts) == 2 && parts[0] == "Bearer") {
-			utils.ResponseError(c, global.CodeInvalidToken)
-			c.Abort()
-			return
-		}
-		// parts[1]是获取到的tokenString，我们使用之前定义好的解析JWT的函数来解析它
-		mc, err := core.ParseToken(parts[1])
+
+		// 获取到的tokenString，我们使用之前定义好的解析JWT的函数来解析它
+		mc, err := core.ParseToken(authHeader)
 		if err != nil {
 			utils.ResponseError(c, global.CodeInvalidToken)
 			c.Abort()

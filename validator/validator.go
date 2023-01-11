@@ -23,7 +23,7 @@ func InitTrans(locale string) (trans ut.Translator) {
 	if v, ok := binding.Validator.Engine().(*validator.Validate); ok {
 
 		//自定义验证方法
-		LoginV(v)
+		//LoginV(v)
 
 		// 注册一个获取json tag的自定义方法
 		v.RegisterTagNameFunc(func(fld reflect.StructField) string {

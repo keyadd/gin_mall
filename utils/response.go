@@ -1,10 +1,10 @@
 package utils
 
 import (
+	"gin_mall/global"
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 	"net/http"
-	"web_app/global"
 )
 
 type ResponseData struct {
