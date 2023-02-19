@@ -2,3 +2,8 @@
 .air.conf
 latest_log
 log
+daemon.txt
+daemon.log
+latest_log
+mall-linux
+mall_server
