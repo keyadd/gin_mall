@@ -6,9 +6,9 @@ import (
 )
 
 func InitImageClass(Router *gin.RouterGroup) {
-	ImageClassRouter := Router.Group("/image_class")
+	ImageClassRouter := Router.Group("/image_class") //？
 	{
-		ImageClassRouter.POST("/image_list", api.ImageList)    //指定分类id图片列表
+		ImageClassRouter.POST("/image_list", api.ImageList)    //指定分类id图片列表？
 		ImageClassRouter.POST("/list", api.ImageClassList)     //图库分类列表
 		ImageClassRouter.POST("/create", api.ImageClassCreate) //创建图库分类
 		ImageClassRouter.POST("/edit", api.ImageClassEdit)     //新增图库分类

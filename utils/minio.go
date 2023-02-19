@@ -12,13 +12,11 @@ import (
 )
 
 // CreateMinoBuket 创建minio 桶
-func CreateMinoBuket(bucketName string) {
-	location := "us-east-1"
+func CreateMinoBuket(bucketName string, location string) {
 	err := global.MINIO.MakeBucket(bucketName, location)
 	if err != nil {
 		// 检查存储桶是否已经存在。
 		exists, err := global.MINIO.BucketExists(bucketName)
-		fmt.Println(exists)
 		if err == nil && exists {
 			fmt.Printf("We already own %s\n", bucketName)
 		} else {
@@ -47,13 +45,14 @@ func UploadFile(bucketName, objectName string, reader io.Reader, objectSize int6
 }
 
 //  GetFileUrl 获取文件url
-func GetFileUrl(bucketName string, fileName string, expires time.Duration) string {
+func GetFileUrl(bucketName string, fileName string, expires time.Duration) *url.URL {
 	//time.Second*24*60*60
 	reqParams := make(url.Values)
 	presignedURL, err := global.MINIO.PresignedGetObject(bucketName, fileName, expires, reqParams)
+
 	if err != nil {
 		zap.L().Error(err.Error())
-		return ""
+		return nil
 	}
-	return fmt.Sprintf("%s", presignedURL)
+	return presignedURL
 }

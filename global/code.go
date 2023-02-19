@@ -11,10 +11,12 @@ const (
 	CodeServerBusy
 	CodeNeedLogin
 	CodeInvalidToken
+	CodeRuleNotExist
 	CodeBeginxError
 	ImageUpdateError
 	ImageGetError
 	ImageFormatError
+	CodeCaptchaError
 )
 
 var codeMsgMap = map[ResCode]string{
@@ -26,10 +28,12 @@ var codeMsgMap = map[ResCode]string{
 	CodeServerBusy:      "服务繁忙",
 	CodeNeedLogin:       "需要登录",
 	CodeInvalidToken:    "无效Token",
+	CodeRuleNotExist:    "权限不存在",
 	CodeBeginxError:     " beginx is error",
 	ImageUpdateError:    "图片上传失败",
 	ImageGetError:       "获取用户头像失败",
 	ImageFormatError:    "上传文件格式不支持",
+	CodeCaptchaError:    "验证码错误",
 }
 
 func (c ResCode) Msg() string {

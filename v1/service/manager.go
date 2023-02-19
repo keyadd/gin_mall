@@ -2,14 +2,14 @@ package service
 
 import (
 	"errors"
-	"gin_mall/core"
 	"gin_mall/global"
+	"gin_mall/initialize"
 	"gin_mall/utils"
 	"gin_mall/v1/model"
 	"gin_mall/v1/model/request"
 	"gin_mall/v1/model/response"
 	"go.uber.org/zap"
-	"reflect"
+	"strconv"
 	"time"
 )
 
@@ -33,7 +33,7 @@ func Login(p *request.Login) (string, error) {
 	}
 
 	//生成token
-	return core.GenToken(m.Id, m.Username)
+	return initialize.GenToken(m.Id, m.Username)
 
 }
 
@@ -44,89 +44,37 @@ func GetManagerInfo(id int64) (res response.ManagerInfo, err error) {
 		global.GVA_LOG.Error("model.model.GetManagerRoleId(id) failed", zap.Int64("manager_id", id), zap.Error(err))
 		return
 	}
-	ruleIdList, err := model.GetManagerRuleID(info.RoleId)
+	ruleIdList, err := model.GetRoleRuleList(info.RoleId)
 	if err != nil {
 		global.GVA_LOG.Error("model.GetManagerRuleID(info.RoleId) failed", zap.Int64("info.RoleId", info.RoleId), zap.Error(err))
 		return
 	}
-	var rule_id []int64
-	for i := 0; i < len(ruleIdList); i++ {
-		rule_id = append(rule_id, ruleIdList[i].RuleId)
+	var ruleIds []int64
+	for _, v := range ruleIdList {
+		ruleIds = append(ruleIds, v.RuleId)
 	}
 
-	menu, err := model.GetRuleMenu(rule_id)
+	menu, err := model.GetRuleMenu(ruleIds)
 	if err != nil {
-		global.GVA_LOG.Error("model.GetRuleMenu(rule_id) failed", zap.Any("rule_id[]", rule_id), zap.Error(err))
+		global.GVA_LOG.Error("model.GetRuleMenu(rule_id) failed", zap.Any("rule_id[]", ruleIds), zap.Error(err))
 		return
 	}
 
-	var menuTree []*response.Menu
-
-	if reflect.ValueOf(menu).IsValid() {
-		//将一级菜单传递给回调函数
-		menuTree, err = tree(menu)
-		if err != nil {
-			global.GVA_LOG.Error("model.GetRuleMenu(rule_id) failed", zap.Any("rule_id[]", rule_id), zap.Error(err))
-			return
-		}
-	}
-
-	role, err := model.InfoRole(info.RoleId)
-	if err != nil {
-		global.GVA_LOG.Error("model.InfoRole(info.RoleId)", zap.Any("info.RoleId", info.RoleId), zap.Error(err))
-		return
-	}
-
-	ruleNames, err := model.GetRuleNames(rule_id)
-	if err != nil {
-		global.GVA_LOG.Error("model.GetRuleNames(rule_id)", zap.Any("rule_id", rule_id), zap.Error(err))
-		return
-	}
-
-	arr := make([]string, 0)
-	for _, v := range ruleNames {
-		str := v.Condition + "," + v.Method
-		arr = append(arr, str)
-	}
+	menus := utils.MenuTree(menu, 0)
 	managerInfo := response.ManagerInfo{
-		Id:        info.Id,
-		Username:  info.Username,
-		Avatar:    info.Avatar,
-		Super:     info.Super,
-		Role:      role,
-		Menus:     menuTree,
-		RuleNames: arr,
+		Id:       info.Id,
+		Username: info.Username,
+		Avatar:   info.Avatar,
+		Super:    info.Super,
+		Menus:    menus,
 	}
 
 	return managerInfo, err
 }
 
-//生成树结构
-func tree(menus []*response.Menu) ([]*response.Menu, error) {
-
-	var item []*response.Menu
-	var err error
-	if reflect.ValueOf(menus).IsValid() {
-		//循环所有一级菜单
-		for k, v := range menus {
-
-			//查询所有该菜单下的所有子菜单
-			item, err = model.GetRuleMenuItem(v.Id)
-
-			//将子菜单的数据循环赋值给父菜单
-			for kk, _ := range item {
-				menus[k].Child = append(menus[k].Child, item[kk])
-			}
-			//将刚刚查询出来的子菜单进行递归,查询出三级菜单和四级菜单
-			tree(item)
-		}
-	}
-	return menus, err
-}
-
 // GetManagerList 获取manager 用户列表
 func GetManagerList(list request.ManagerList) (res response.ResList, err error) {
-	managerList, err := model.GetManagerList(list)
+	managerList, total, err := model.GetManagerList(list)
 	if err != nil {
 		global.GVA_LOG.Error("model.GetManagerList(list)", zap.Any("list", list), zap.Error(err))
 		return
@@ -134,12 +82,20 @@ func GetManagerList(list request.ManagerList) (res response.ResList, err error) 
 	var listArr []*response.ManagerList
 	//var err error
 	for _, v := range managerList {
-		var role *response.InfoRole
-		role, err = model.InfoRole(v.RoleId)
-		if err != nil {
-			global.GVA_LOG.Error("model.InfoRole(v.RoleId))", zap.Any("v.RoleId", v.RoleId), zap.Error(err))
-			return
-		}
+		//var role *response.InfoRole
+		//role, err = model.InfoRole(v.RoleId)
+		//if err != nil {
+		//	global.GVA_LOG.Error("model.InfoRole(v.RoleId))", zap.Any("v.RoleId", v.RoleId), zap.Error(err))
+		//	return
+		//}
+
+		UpdateTime, _ := strconv.Atoi(v.UpdateTime)
+		unixUpdateTime := time.Unix(int64(UpdateTime), 0)
+		v.UpdateTime = unixUpdateTime.Format("2006-01-02 15:04:05")
+
+		createTime, _ := strconv.Atoi(v.CreateTime)
+		unixCreateTime := time.Unix(int64(createTime), 0)
+		v.CreateTime = unixCreateTime.Format("2006-01-02 15:04:05")
 		r := response.ManagerList{
 			Id:         v.Id,
 			Username:   v.Username,
@@ -149,12 +105,11 @@ func GetManagerList(list request.ManagerList) (res response.ResList, err error) 
 			Avatar:     v.Avatar,
 			RoleId:     v.RoleId,
 			Super:      v.Super,
-			Role:       role,
+			Role:       v.Role,
 		}
 		listArr = append(listArr, &r)
 	}
 
-	total := model.GetManagerCount()
 	roleList, err := model.RoleList()
 	if err != nil {
 		global.GVA_LOG.Error("model.RoleList()", zap.Error(err))
@@ -163,7 +118,7 @@ func GetManagerList(list request.ManagerList) (res response.ResList, err error) 
 
 	resList := response.ResList{
 		ManagerList: listArr,
-		TotalCount:  total,
+		Total:       total,
 		InfoRole:    roleList,
 	}
 	return resList, err
@@ -248,9 +203,9 @@ func LogoutManager(i int64) (res bool) {
 		return false
 	}
 
-	_, err = core.GenToken(i, info.Username)
+	_, err = initialize.GenToken(i, info.Username)
 	if err != nil {
-		global.GVA_LOG.Error("core.GenToken(i, info.Username)", zap.Any("i, info.Username", info.Username), zap.Error(err))
+		global.GVA_LOG.Error("initialize.GenToken(i, info.Username)", zap.Any("i, info.Username", info.Username), zap.Error(err))
 		return false
 	}
 

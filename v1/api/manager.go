@@ -2,6 +2,7 @@ package api
 
 import (
 	"errors"
+	"fmt"
 	"gin_mall/global"
 	"gin_mall/utils"
 	"gin_mall/v1/model/request"
@@ -26,20 +27,26 @@ func Login(c *gin.Context) {
 		return
 	}
 
-	token, err := service.Login(p)
+	if store.Verify(p.CaptchaId, p.Captcha, true) {
 
-	if nil != err {
-		global.GVA_LOG.Error("service.Login(p) failed", zap.Error(err))
+		token, err := service.Login(p)
 
-		if errors.Is(err, service.ErrorUserNotExist) {
-			utils.ResponseError(c, global.CodeUserNotExist)
+		if nil != err {
+			global.GVA_LOG.Error("service.Login(p) failed", zap.Error(err))
+
+			if errors.Is(err, service.ErrorUserNotExist) {
+				utils.ResponseError(c, global.CodeUserNotExist)
+				return
+			}
+			utils.ResponseError(c, global.CodeInvalidPassword)
 			return
 		}
-		utils.ResponseError(c, global.CodeInvalidPassword)
-		return
+		//返回响应
+		utils.ResponseSuccess(c, token)
+	} else {
+		utils.ResponseError(c, global.CodeCaptchaError)
+		//response.FailWithMessage("", c)
 	}
-	//返回响应
-	utils.ResponseSuccess(c, token)
 
 }
 
@@ -101,6 +108,7 @@ func UpdateStatus(c *gin.Context) {
 		utils.ResponseError(c, global.CodeInvalidParam)
 		return
 	}
+	fmt.Println(r)
 
 	res := service.UpdateStatusManager(r)
 	utils.ResponseSuccess(c, res)

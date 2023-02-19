@@ -12,7 +12,17 @@ type GetById struct {
 }
 
 type IdsReq struct {
-	Ids []int `json:"ids" form:"ids"`
+	Ids []int `json:"ids" form:"ids" binding:"required"`
+}
+
+type UpdateStatusRequest struct {
+	GetById
+	Status string `json:"status" form:"status" binding:"required"`
+}
+
+type StatusIdsRequest struct {
+	IdsReq
+	Status string `json:"status" form:"status" binding:"required"`
 }
 
 // Get role by id structure

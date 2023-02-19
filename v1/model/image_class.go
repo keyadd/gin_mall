@@ -1,6 +1,7 @@
 package model
 
 import (
+	"fmt"
 	"gin_mall/global"
 	"gin_mall/v1/model/request"
 	"gin_mall/v1/model/response"
@@ -20,8 +21,22 @@ func GetImageClassCount() (total int64) {
 	return
 }
 
-func AddImageClass(r request.CreateImageClass) (res response.ImageClass, err error) {
+func AddImageClass(r response.ImageClass) (res response.ImageClass, err error) {
+	fmt.Println(r)
 	db := global.GVA_DB.Table("image_class")
-	err = db.Create(&res).Error
-	return
+	err = db.Create(&r).Error
+	fmt.Println(r.Name)
+	return r, err
+}
+
+func EditImageClass(r request.EditImageClass) (res int64, err error) {
+	db := global.GVA_DB.Table("image_class")
+	result := db.Where("id = ?", r.Id).Updates(r)
+	return result.RowsAffected, result.Error
+}
+
+func DeleteImageClassId(r request.GetById) (res int64, err error) {
+	db := global.GVA_DB.Table("image_class")
+	result := db.Delete(&r)
+	return result.RowsAffected, result.Error
 }

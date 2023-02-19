@@ -21,3 +21,22 @@ func GetImageList(r request.ImageClassId) (res []*response.Image, err error) {
 	err = db.Limit(limit).Offset(offset).Find(&res).Error
 	return
 }
+
+func UploadImage(image response.Image) (res response.Image, err error) {
+	db := global.GVA_DB.Table("image")
+	err = db.Create(&image).Error
+	return image, err
+}
+
+func RenameImage(r request.ImageRename) (res int64, err error) {
+	db := global.GVA_DB.Table("image")
+	result := db.Where("id = ?", r.Id).Updates(r)
+	return result.RowsAffected, result.Error
+}
+
+func DeleteImage(arr []int) (res int64, err error) {
+	var r response.Image
+	db := global.GVA_DB.Table("image")
+	result := db.Delete(r, arr)
+	return result.RowsAffected, result.Error
+}

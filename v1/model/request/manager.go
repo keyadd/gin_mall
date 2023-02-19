@@ -2,8 +2,10 @@ package request
 
 // Login 登录请求参数
 type Login struct {
-	Username string `json:"username" form:"username" binding:"required"` //用户名
-	Password string `json:"password" form:"password" binding:"required"` //用户密码
+	Username  string `json:"username" form:"username" binding:"required"` //用户名
+	Password  string `json:"password" form:"password" binding:"required"` //用户密码
+	Captcha   string `json:"captcha"`
+	CaptchaId string `json:"captchaId"`
 }
 
 type ManagerList struct {
@@ -22,11 +24,6 @@ type ManagerRequest struct {
 type EditRequest struct {
 	GetById
 	ManagerRequest
-}
-
-type UpdateStatusRequest struct {
-	GetById
-	Status string `json:"status" form:"status" binding:"required"`
 }
 
 type UpdatePasswordRequest struct {

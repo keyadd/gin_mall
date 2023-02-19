@@ -52,11 +52,44 @@ func GetIdImageList(r request.ImageClassId) (result response.PageResult, err err
 }
 
 func AddImageClass(r request.CreateImageClass) (res response.ImageClass, err error) {
-	res, err = model.AddImageClass(r)
+
+	imageClass := response.ImageClass{
+		Name:  r.Name,
+		Order: r.Order,
+	}
+	res, err = model.AddImageClass(imageClass)
 	if err != nil {
 		global.GVA_LOG.Error("model.AddImageClass(r)", zap.Any("r", r), zap.Error(err))
 		return
 	}
 	return
+
+}
+
+func EditImageClass(r request.EditImageClass) bool {
+	res, err := model.EditImageClass(r)
+	if err != nil {
+		global.GVA_LOG.Error("model.AddImageClass(r)", zap.Any("r", r), zap.Error(err))
+		return false
+	}
+	if res == 1 {
+		return true
+	} else {
+		return false
+	}
+}
+
+func DeleteImageClass(r request.GetById) bool {
+
+	res, err := model.DeleteImageClassId(r)
+	if err != nil {
+		global.GVA_LOG.Error("model.EditManager(r)", zap.Any("r", r), zap.Error(err))
+		return false
+	}
+	if res == 1 {
+		return true
+	} else {
+		return false
+	}
 
 }

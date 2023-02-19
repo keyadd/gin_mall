@@ -19,7 +19,7 @@ func ResponseError(c *gin.Context, code global.ResCode) {
 		Msg:  code.Msg(),
 		Data: nil,
 	}
-	c.JSON(http.StatusOK, rd)
+	c.JSON(400, rd)
 
 }
 

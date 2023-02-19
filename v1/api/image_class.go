@@ -48,8 +48,26 @@ func ImageClassCreate(c *gin.Context) {
 
 }
 func ImageClassEdit(c *gin.Context) {
+	var r request.EditImageClass
+	err := c.ShouldBind(&r)
+	if err != nil {
+		global.GVA_LOG.Error("ManagerList with invalid params", zap.Error(err))
+		utils.ResponseError(c, global.CodeInvalidParam)
+		return
+	}
+	result := service.EditImageClass(r)
+	utils.ResponseSuccess(c, result)
 
 }
 func ImageClassDelete(c *gin.Context) {
+	var r request.GetById
+	err := c.ShouldBind(&r)
+	if err != nil {
+		global.GVA_LOG.Error("c.ShouldBind(&r) with invalid params", zap.Error(err))
+		utils.ResponseError(c, global.CodeInvalidParam)
+		return
+	}
+	res := service.DeleteImageClass(r)
+	utils.ResponseSuccess(c, res)
 
 }

@@ -23,21 +23,17 @@ func GetManagerInfo(id int64) (UserInfo *response.Manager, err error) {
 	return user, nil
 }
 
-func GetManagerList(list request.ManagerList) ([]*response.Manager, error) {
-	var m []*response.Manager
+func GetManagerList(list request.ManagerList) ([]*response.ManagerList, int64, error) {
+	var m []*response.ManagerList
+	var total int64
 	limit := list.PageSize
 	offset := list.PageSize * (list.Page - 1)
 
 	db := global.GVA_DB.Table("manager")
 	db = db.Where("username like ?", "%"+list.Keyword+"%")
-	err := db.Limit(limit).Offset(offset).Find(&m).Error
-	return m, err
-}
-
-func GetManagerCount() (total int64) {
-	db := global.GVA_DB.Table("manager")
 	_ = db.Count(&total).Error
-	return
+	err := db.Limit(limit).Offset(offset).Preload("Role").Find(&m).Error
+	return m, total, err
 }
 
 func CreateManager(m response.Manager) (response.Manager, error) {

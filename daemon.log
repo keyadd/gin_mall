@@ -1,0 +1,34 @@
+t[PID] 5638 Start At 2023-02-18 17:32:50
+您正在使用config的默认值,config的路径为config.yaml
+{"timestamp":"2023-02-18 17:32:50.50180","caller":"rule_manager.go:102","logLevel":"INFO","msg":"[SystemRuleManager] System rules loaded","rules":{"3":[{"metricType":3,"triggerCount":200,"strategy":1}]}}
+2023/02/18 17:32:50 5638 :8881
+[PID] 6239 Start At 2023-02-18 17:48:44
+您正在使用config的默认值,config的路径为config.yaml
+{"timestamp":"2023-02-18 17:48:44.44180","caller":"rule_manager.go:102","logLevel":"INFO","msg":"[SystemRuleManager] System rules loaded","rules":{"3":[{"metricType":3,"triggerCount":200,"strategy":1}]}}
+2023/02/18 17:48:44 6239 :8881
+2023/02/18 17:49:02 6239 Received SIGTERM.
+2023/02/18 17:49:02 6239 Waiting for connections to finish...
+2023/02/18 17:49:02 6239 [::]:8881 Listener closed.
+2023/02/18 17:49:02 6239 Serve() returning...
+[PID] 6283 Start At 2023-02-18 17:49:11
+{"timestamp":"2023-02-18 17:49:11.11180","caller":"sys_metric_stat.go:85","logLevel":"ERROR","msg":"Fail to read Virtual Memory"}
+signal: killed
+您正在使用config的默认值,config的路径为config.yaml
+{"timestamp":"2023-02-18 17:49:11.11180","caller":"rule_manager.go:102","logLevel":"INFO","msg":"[SystemRuleManager] System rules loaded","rules":{"3":[{"metricType":3,"triggerCount":200,"strategy":1}]}}
+2023/02/18 17:49:11 6283 :8881
+[PID] 6342 Start At 2023-02-18 17:50:28
+您正在使用config的默认值,config的路径为config.yaml
+{"timestamp":"2023-02-18 17:50:28.28180","caller":"rule_manager.go:102","logLevel":"INFO","msg":"[SystemRuleManager] System rules loaded","rules":{"3":[{"metricType":3,"triggerCount":200,"strategy":1}]}}
+2023/02/18 17:50:28 6342 :8881
+[PID] 6512 Start At 2023-02-18 17:56:32
+您正在使用config的默认值,config的路径为config.yaml
+{"timestamp":"2023-02-18 17:56:32.32180","caller":"rule_manager.go:102","logLevel":"INFO","msg":"[SystemRuleManager] System rules loaded","rules":{"3":[{"metricType":3,"triggerCount":200,"strategy":1}]}}
+2023/02/18 17:56:32 6512 :8881
+2023/02/18 17:56:46 6512 Received SIGTERM.
+2023/02/18 17:56:46 6512 Waiting for connections to finish...
+2023/02/18 17:56:46 6512 Serve() returning...
+2023/02/18 17:56:46 6512 [::]:8881 Listener closed.
+[PID] 11887 Start At 2023-02-19 03:50:38
+您正在使用config的默认值,config的路径为config.yaml
+{"timestamp":"2023-02-19 03:50:38.38190","caller":"rule_manager.go:102","logLevel":"INFO","msg":"[SystemRuleManager] System rules loaded","rules":{"3":[{"metricType":3,"triggerCount":200,"strategy":1}]}}
+2023/02/19 03:50:38 11887 :8881

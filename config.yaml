@@ -1,6 +1,6 @@
 
 system:
-  env: 'public'  # Change to "develop" to skip authentication for development mode
+  env: ''  # # 	DebugMode = "debug" ReleaseMode = "release"
   addr: 8881
   db-type: 'mysql'
   name: "gin_mall"
@@ -21,7 +21,7 @@ zap:
   show-line: true
   encode-level: 'LowercaseColorLevelEncoder'
   stacktrace-key: 'stacktrace'
-  log-in-console: true
+  log-in-console: false
 
 
 mysql:
@@ -32,8 +32,16 @@ mysql:
   password: 'toor'
   max-idle-conns: 10
   max-open-conns: 100
-  log-mode: false
-  log-zap: "zap"
+  log-mode: true
+  log-zap: "Info"
+
+
+jwt:
+  signing-key: 'qmPlus'
+  expires-time: 604800
+  buffer-time: 86400
+  user_id_name: "userID"
+  token_header_name: "Authorization"
 
 
 redis:
@@ -41,9 +49,26 @@ redis:
   db: 0
   password: "toor"
 
+# captcha configuration
+captcha:
+  key-long: 6
+  img-width: 240
+  img-height: 80
 
 minio:
-  endpoint: "127.0.0.1:9000"
-  accessKeyID: "1BYtcmFq9NY8BsYm"
-  secretAccessKey: "0S9W9oQ8tPwtO94JLbBN38Ulk2fRUb8I"
-  secure: false
+  bucket_name: "file"
+  location: "us-east-1"
+  endpoint: "minio.acorn.eu.org"
+  accessKeyID: "5LHxOtSinAnngvtA"
+  secretAccessKey: "cGT0VEYZ6tH8rwDvkB3BUN6RPC0OkrqZ"
+  secure: true
+
+
+#
+#minio:
+#  bucket_name: "file"
+#  location: "us-east-1"
+#  endpoint: "127.0.0.1:9000"
+#  accessKeyID: "1BYtcmFq9NY8BsYm"
+#  secretAccessKey: "0S9W9oQ8tPwtO94JLbBN38Ulk2fRUb8I"
+#  secure: false
